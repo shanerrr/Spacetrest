@@ -17,6 +17,13 @@ interface IState {
     title: string,
     url: string,
     show: boolean
+  },
+  pictures: {
+    href: string,
+    items: Array<>,
+    links: [],
+    metadata: object
+    version: string
   }
 }
 
@@ -24,6 +31,7 @@ const Home: NextPage<{ pictureOfDay: IState['pictureOfDay'] }> = ({ pictureOfDay
 
   //state that captures our likes (will be using a set using url as unique key)
   const [likes, setLikes] = React.useState<{ [key: string]: boolean }>({});
+  const [photos, setPhotos] = React.useState({ loading: true, list: [] });
 
   //handler that deals with clicking the like button
   const likeHandler = (url: string) => {
@@ -34,8 +42,21 @@ const Home: NextPage<{ pictureOfDay: IState['pictureOfDay'] }> = ({ pictureOfDay
     localStorage.setItem('likes', JSON.stringify({ ...likes, [url]: !!!likes[url] }))
   }
 
-  //on component mount, fetch local storage on likes.
-  React.useEffect(() => setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []), [])
+  //on component mount, fetch local storage on likes and fetch the other images
+  React.useEffect(() => {
+
+    //api call
+    const fetchPhotos = async () => {
+      new ImageService().getGeneralPhotos(Math.floor(Math.random() * 50))
+        .then(res => {
+
+        })
+    }
+
+    setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []);
+    fetchPhotos();
+
+  }, [])
 
   return (
     <>

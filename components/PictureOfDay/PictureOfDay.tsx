@@ -20,8 +20,7 @@ export default function PictureOfDay({ pictureOfDay, isLiked, onLikeClick }: { p
 
   return (
     <>
-
-      <Image src={'lol'} loader={() => pictureOfDay.hdurl} layout='fill' objectFit='cover' quality={100} priority={true} />
+      <Image src={pictureOfDay.title} loader={() => pictureOfDay.url} layout='fill' objectFit='cover' quality={100} priority={true} />
 
       <section className='absolute p-8 bottom-0 drop-shadow-2xl'>
         <div className='grid grid-cols-2 gap-4'>
