@@ -7,7 +7,7 @@ import type { NextPage, GetServerSideProps } from 'next';
 import { ImageService } from '../services/image';
 
 interface IState {
-  pictureOfDay: {
+  imageResponse: {
     copyright: string,
     date: string,
     explanation: string,
@@ -16,22 +16,16 @@ interface IState {
     service_version: string,
     title: string,
     url: string,
-    show: boolean
-  },
-  pictures: {
-    href: string,
-    items: Array<>,
-    links: [],
-    metadata: object
-    version: string
+    show: boolean,
+    colLength?: number
   }
 }
 
-const Home: NextPage<{ pictureOfDay: IState['pictureOfDay'] }> = ({ pictureOfDay }: { pictureOfDay: IState['pictureOfDay'] }) => {
+const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageResponse }: { imageResponse: IState['imageResponse'] }) => {
 
   //state that captures our likes (will be using a set using url as unique key)
   const [likes, setLikes] = React.useState<{ [key: string]: boolean }>({});
-  const [photos, setPhotos] = React.useState({ loading: true, list: [] });
+  const [photos, setPhotos] = React.useState({ loading: true, list: Array<IState['imageResponse']>() });
 
   //handler that deals with clicking the like button
   const likeHandler = (url: string) => {
@@ -45,12 +39,11 @@ const Home: NextPage<{ pictureOfDay: IState['pictureOfDay'] }> = ({ pictureOfDay
   //on component mount, fetch local storage on likes and fetch the other images
   React.useEffect(() => {
 
-    //api call
+    //api call getting all images of days for 30 days
     const fetchPhotos = async () => {
-      new ImageService().getGeneralPhotos(Math.floor(Math.random() * 50))
-        .then(res => {
-
-        })
+      const startDate = new Date()
+      new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - 1, startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1).toISOString().split('T')[0])
+        .then(res => setPhotos({ ...photos, loading: false, list: res.data.map((v: IState['imageResponse']) => ({ ...v, colLength: Math.floor(Math.random() * 3) + 1 })).filter((image: IState['imageResponse']) => image.media_type === "image").reverse() }))
     }
 
     setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []);
@@ -66,15 +59,17 @@ const Home: NextPage<{ pictureOfDay: IState['pictureOfDay'] }> = ({ pictureOfDay
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/* our main page (Picture of the day)*/}
-      <section className='h-screen relative shadow-inner align-middle'>
-        <PictureOfDay pictureOfDay={pictureOfDay} isLiked={likes[pictureOfDay.hdurl]} onLikeClick={(url: string) => likeHandler(url)} />
-      </section>
+      <main className='snap-y'>
+        {/* our main page (Picture of the day)*/}
+        <section className='h-screen relative shadow-inner align-middle snap-start'>
+          <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string) => likeHandler(url)} />
+        </section>
 
-      {/* our gallery component */}
-      <section className='h-screen relative align-middle'>
-        <PictureList onLikeClick={likeHandler} />
-      </section>
+        {/* our gallery component */}
+        <section className='h-screen relative align-middle snap-start'>
+          <PictureList listLoading={photos.loading} list={photos.list} likes={likes} onLikeClick={likeHandler} />
+        </section>
+      </main>
 
 
       {/* <footer className=''>
@@ -99,7 +94,7 @@ export default Home;
 export const getServerSideProps: GetServerSideProps = async () => {
   return {
     props: {
-      pictureOfDay: { ...(await new ImageService().getPictureOfDay()).data, show: true },
+      imageResponse: { ...(await new ImageService().getPictureOfDay()).data[0], show: true },
     },
   };
 };
