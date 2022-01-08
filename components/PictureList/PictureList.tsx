@@ -1,9 +1,8 @@
 import React from 'react';
-import Image from 'next/image';
-
+import PictureListItem from './PictureListItem'
 interface IState {
   photoDetails: {
-    copyright: string,
+    copyright?: string,
     date: string,
     explanation: string,
     hdurl: string,
@@ -16,7 +15,7 @@ interface IState {
   }
 }
 
-export default function PictureList({ list, listLoading, likes, onLikeClick }: { list: Array<IState['photoDetails']>, listLoading: boolean, likes: { [key: string]: boolean }, onLikeClick: (url: string) => void }) {
+const PictureList = ({ list, listLoading, likes, onLikeClick }: { list: Array<IState['photoDetails']>, listLoading: boolean, likes: { [key: string]: boolean }, onLikeClick: (url: string) => void }) => {
 
   const [test] = React.useState([
     {
@@ -27,6 +26,7 @@ export default function PictureList({ list, listLoading, likes, onLikeClick }: {
       "service_version": "v1",
       "title": "Ninety Gravitational Wave Spectrograms and Counting",
       "url": "https://apod.nasa.gov/apod/image/2112/GWaveCatalog_LigoVirgo_1080.jpg",
+      show: true,
       colLength: Math.floor(Math.random() * 3) + 1
     },
     {
@@ -38,6 +38,7 @@ export default function PictureList({ list, listLoading, likes, onLikeClick }: {
       "service_version": "v1",
       "title": "Comet Hale-Bopp Over Val Parola Pass",
       "url": "https://apod.nasa.gov/apod/image/2112/halebopp_dimai_960.jpg",
+      show: true,
       colLength: Math.floor(Math.random() * 3) + 1
     },
     {
@@ -49,6 +50,7 @@ export default function PictureList({ list, listLoading, likes, onLikeClick }: {
       "service_version": "v1",
       "title": "A Total Eclipse of the Sun",
       "url": "https://apod.nasa.gov/apod/image/2112/SOLARECLIPSE2021FORDISTROHighRes1024.jpg",
+      show: true,
       colLength: Math.floor(Math.random() * 3) + 1
     },
     {
@@ -60,39 +62,25 @@ export default function PictureList({ list, listLoading, likes, onLikeClick }: {
       "service_version": "v1",
       "title": "Eclipse on a Polar Day",
       "url": "https://apod.nasa.gov/apod/image/2112/Eclipseclock-final2_1024c.JPG",
+      show: true,
       colLength: Math.floor(Math.random() * 3) + 1
     }
   ])
 
   return (
-    <section className="container mx-auto relative h-full py-10">
+    <section className="container mx-auto relative h-max py-10">
       {
         listLoading ?
           <i className="uil uil-globe text-5xl text-blue absolute top-2/4 left-2/4 animate-pulse"></i>
           :
           <div className='grid grid-flow-row-dense grid-cols-4 auto-rows-auto gap-5'>
             {
-              list.map(photo => (
-                <article key={photo.url} className={`col-span-${photo.colLength} shadow-md rounded-[10px] p-4`}>
-                  <section>
-                    <div className='relative h-80 bg-white'>
-                      <Image className='rounded-[10px]' src={'lol'} loader={() => photo.url} layout='fill' objectFit='cover' />
-                      <div className='absolute -right-3 -bottom-4 h-max p-1 bg-white rounded-full cursor-pointer' onClick={() => onLikeClick(photo.hdurl)}>
-                        <i className={`${likes[photo.hdurl] ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} text-3xl`}></i>
-                      </div>
-                    </div>
-                    <div>
-                      <span className='text-xs'>{photo.date}</span>
-                      <h1 className='font-medium'>{photo.title}</h1>
-                    </div>
-                  </section>
-                  <div>
-                  </div>
-                </article>
-              ))
+              list.map(photo => <PictureListItem key={photo.hdurl} photo={photo} likes={likes} onLikeClick={onLikeClick} />)
             }
           </div>
       }
     </section>
   )
 }
+
+export default PictureList;

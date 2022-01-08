@@ -13,7 +13,7 @@ interface imageResponse {
   show: boolean
 }
 
-export default function PictureOfDay({ imageResponse, isLiked, onLikeClick }: { imageResponse: imageResponse, isLiked: boolean, onLikeClick: (url: string) => void }) {
+const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: imageResponse, isLiked: boolean, onLikeClick: (url: string) => void }) => {
 
   //to show information
   const [showPictureofDay, setShowPictureofDay] = React.useState(imageResponse.show);
@@ -26,7 +26,7 @@ export default function PictureOfDay({ imageResponse, isLiked, onLikeClick }: { 
         <div className='grid grid-cols-2 gap-4'>
           <div className={`bg-black/20 rounded-lg drop-shadow-2xl p-6 ${showPictureofDay ? 'visible' : 'invisible'}`}>
             <span className='text-white'>{new Date().toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-            <h1 className='font-bold text-white text-7xl align-middle underline pt-1'><a href={imageResponse.hdurl} target='_blank'>{imageResponse.title}</a></h1>
+            <h1 className='font-bold text-white text-7xl align-middle underline pt-1'><a href={imageResponse.hdurl} target='_blank' rel="noreferrer">{imageResponse.title}</a></h1>
             <p className='text-white font-medium pt-7'>{imageResponse.explanation}</p>
           </div>
           <div className='flex justify-end items-end'>
@@ -35,7 +35,7 @@ export default function PictureOfDay({ imageResponse, isLiked, onLikeClick }: { 
                 <i className={`${showPictureofDay ? 'uil uil-eye-slash' : 'uil uil-eye'} text-4xl`}></i>
               </div>
               <div className='rounded-full p-3 bg-white h-max drop-shadow-2xl cursor-pointer' onClick={() => onLikeClick(imageResponse.hdurl)}>
-                <i className={`${isLiked ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} text-4xl`}></i>
+                <i className={`${isLiked ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} text-4xl transition-colors`}></i>
               </div>
             </div>
           </div>
@@ -44,3 +44,5 @@ export default function PictureOfDay({ imageResponse, isLiked, onLikeClick }: { 
     </>
   )
 }
+
+export default PictureOfDay;

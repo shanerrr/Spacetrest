@@ -16,11 +16,11 @@ export class ImageService {
    * @param startDate optional param 
    * @returns object of image
    */
-  getPictureOfDay(startDate: string = new Date().toISOString().split('T')[0], endDate: string = new Date().toISOString().split('T')[0]) {
+  getPictureOfDay(startDate: string | null = null, endDate: string | null = null) {
     return axios({
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      url: this.uri + this.config.pictureOfDay + `&start_date=${startDate}&end_date=${endDate}`
+      url: this.uri + this.config.pictureOfDay + `${startDate ? `&start_date=${startDate}&end_date=${endDate}` : ''}`
     });
   }
 }

@@ -17,7 +17,7 @@ interface IState {
     title: string,
     url: string,
     show: boolean,
-    colLength?: number
+    colLength: number
   }
 }
 
@@ -43,7 +43,7 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
     const fetchPhotos = async () => {
       const startDate = new Date()
       new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - 1, startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1).toISOString().split('T')[0])
-        .then(res => setPhotos({ ...photos, loading: false, list: res.data.map((v: IState['imageResponse']) => ({ ...v, colLength: Math.floor(Math.random() * 3) + 1 })).filter((image: IState['imageResponse']) => image.media_type === "image").reverse() }))
+        .then(res => setPhotos({ ...photos, loading: false, list: res.data.map((v: IState['imageResponse']) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: IState['imageResponse']) => image.media_type === "image").reverse() }))
     }
 
     setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []);
@@ -59,14 +59,14 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className='snap-y'>
+      <main className='snap-y snap-mandatory h-max'>
         {/* our main page (Picture of the day)*/}
-        <section className='h-screen relative shadow-inner align-middle snap-start'>
+        <section className='h-screen relative align-middle snap-center'>
           <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string) => likeHandler(url)} />
         </section>
 
         {/* our gallery component */}
-        <section className='h-screen relative align-middle snap-start'>
+        <section className='h-screen relative align-middle snap-center'>
           <PictureList listLoading={photos.loading} list={photos.list} likes={likes} onLikeClick={likeHandler} />
         </section>
       </main>
@@ -92,9 +92,10 @@ export default Home;
 
 //server data fetching
 export const getServerSideProps: GetServerSideProps = async () => {
+
   return {
     props: {
-      imageResponse: { ...(await new ImageService().getPictureOfDay()).data[0], show: true },
+      imageResponse: { ...(await new ImageService().getPictureOfDay()).data, show: true },
     },
   };
 };
