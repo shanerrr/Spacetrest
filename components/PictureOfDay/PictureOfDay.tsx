@@ -20,9 +20,11 @@ const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: 
 
   return (
     <>
-      <Image src={imageResponse.title} loader={() => imageResponse.url} layout='fill' objectFit='cover' quality={100} priority={true} />
+      <div className={`${showPictureofDay ? 'h-[94%]' : 'h-full'} relative`}>
+        <Image className={`${showPictureofDay ? 'rounded-b-[30px]' : 'rounded-none'}  transition-all duration-300`} placeholder='blur' src={imageResponse.title} loader={() => imageResponse.hdurl} layout='fill' objectFit='cover' quality={100} priority={true} blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
+      </div>
 
-      <section className='absolute p-8 bottom-0 drop-shadow-2xl'>
+      <section className='absolute p-8 bottom-0 drop-shadow-2xl animate-fadeInBottom'>
         <div className='grid grid-cols-2 gap-4'>
           <div className={`bg-black/20 rounded-lg drop-shadow-2xl p-6 ${showPictureofDay ? 'visible' : 'invisible'}`}>
             <span className='text-white'>{new Date().toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
@@ -30,12 +32,12 @@ const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: 
             <p className='text-white font-medium pt-7'>{imageResponse.explanation}</p>
           </div>
           <div className='flex justify-end items-end'>
-            <div className='flex opacity-50 hover:opacity-100'>
-              <div className='rounded-full p-3 bg-white h-max mr-2 drop-shadow-2xl cursor-pointer' onClick={() => setShowPictureofDay(!showPictureofDay)}>
-                <i className={`${showPictureofDay ? 'uil uil-eye-slash' : 'uil uil-eye'} text-4xl`}></i>
+            <div className='flex'>
+              <div className='rounded-full p-3 bg-[#181A18] h-max mr-2 drop-shadow-2xl cursor-pointer' onClick={() => setShowPictureofDay(!showPictureofDay)}>
+                <i className={`${showPictureofDay ? 'uil uil-eye-slash' : 'uil uil-eye'} text-4xl text-white`}></i>
               </div>
-              <div className='rounded-full p-3 bg-white h-max drop-shadow-2xl cursor-pointer' onClick={(e) => onLikeClick(imageResponse.hdurl, e)}>
-                <i className={`${isLiked ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} text-4xl transition-colors`}></i>
+              <div className='rounded-full p-3 bg-[#181A18] h-max drop-shadow-2xl cursor-pointer' onClick={(e) => onLikeClick(imageResponse.hdurl, e)}>
+                <i className={`${isLiked ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} text-4xl text-white transition-colors`}></i>
               </div>
             </div>
           </div>

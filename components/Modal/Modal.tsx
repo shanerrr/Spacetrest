@@ -2,11 +2,17 @@ import React from 'react';
 
 import { createPortal } from 'react-dom';
 
-import styles from './Modal.module.css';
+type ReactNode =
+  | React.ReactChild
+  | ReadonlyArray<ReactNode>
+  | React.ReactPortal
+  | boolean
+  | null
+  | undefined;
 
-const Modal = ({ children, show }) => {
+const Modal = ({ children, show }: { children: ReactNode, show: boolean }) => {
 
-  const ref = React.useRef<HTMLHeadingElement>(null);
+  const ref = React.useRef<HTMLHeadingElement | null>(null);
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -17,12 +23,10 @@ const Modal = ({ children, show }) => {
   if (!show || !mounted) return null;
 
   return createPortal(
-    <>
-      <main className="top-0 left-0 right-0 bottom-0 fixed z-10 bg-black/50">
-        {children}
-      </main>
-    </>,
-    ref.current
+    <main className="top-0 left-0 right-0 bottom-0 fixed z-10 bg-black/50">
+      {children}
+    </main>,
+    ref.current as HTMLElement
   );
 }
 

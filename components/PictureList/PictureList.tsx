@@ -75,7 +75,7 @@ const PictureList = ({ list, listLoading, likes, onLikeClick }: { list: Array<IS
       <section className="container mx-auto relative h-max py-10">
         {
           listLoading ?
-            <i className="uil uil-globe text-5xl text-blue absolute top-2/4 left-2/4 animate-pulse"></i>
+            <i className="uil uil-globe text-5xl text-white absolute top-2/4 left-2/4 animate-pulse"></i>
             :
             <div className='grid grid-flow-row-dense grid-cols-4 auto-rows-auto gap-5'>
               {
@@ -85,7 +85,7 @@ const PictureList = ({ list, listLoading, likes, onLikeClick }: { list: Array<IS
         }
       </section>
 
-      <PictureModal modalDetails={modalDetails} closeModal={() => setModalDetails({ ...modalDetails, show: false })} />
+      <PictureModal modalDetails={modalDetails} likes={likes} onLikeClick={onLikeClick} closeModal={() => setModalDetails({ ...modalDetails, show: false })} />
     </>
   )
 }

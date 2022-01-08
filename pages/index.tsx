@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import PictureOfDay from '../components/PictureOfDay';
 import PictureList from '../components/PictureList';
+import Image from 'next/image';
 
 import type { NextPage, GetServerSideProps } from 'next';
 import { ImageService } from '../services/image';
@@ -43,14 +44,14 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
     //api call getting all images of days for 30 days
     const fetchPhotos = async () => {
       const startDate = new Date()
-      new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - 1, startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1).toISOString().split('T')[0])
+      new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - 2, startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1).toISOString().split('T')[0])
         .then(res => setPhotos({ ...photos, loading: false, list: res.data.map((v: IState['imageResponse']) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: IState['imageResponse']) => image.media_type === "image").reverse() }))
     }
 
     setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []);
-    fetchPhotos();
+    // fetchPhotos();
 
-  }, [])
+  }, []);
 
   return (
     <>
@@ -60,31 +61,25 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className='snap-y snap-mandatory h-max'>
+      <main className='snap-y snap-mandatory h-max bg-[#181A18]'>
         {/* our main page (Picture of the day)*/}
         <section className='h-screen relative align-middle snap-center'>
           <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} />
         </section>
 
         {/* our gallery component */}
-        <section className='h-screen relative align-middle snap-center'>
+        <section className='h-max relative align-middle snap-center'>
           <PictureList listLoading={photos.loading} list={photos.list} likes={likes} onLikeClick={likeHandler} />
         </section>
+
+
+        {!photos.loading && <footer className='mb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
+          <a className='flex justify-center items-center' href="https://github.com/shanerrr" target="_blank" rel="noopener noreferrer">
+            <Image src='/github.png' height={32} width={32} />
+          </a>
+        </footer>}
+
       </main>
-
-
-      {/* <footer className=''>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className=''>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer> */}
     </>
   )
 }

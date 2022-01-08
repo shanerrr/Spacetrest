@@ -17,7 +17,7 @@ interface IState {
   }
 }
 
-const PictureModal = ({ modalDetails, closeModal }: { modalDetails: { show: boolean, details: IState['photoDetails'] | null }, closeModal: () => void }) => {
+const PictureModal = ({ modalDetails, likes, onLikeClick, closeModal }: { modalDetails: { show: boolean, details: IState['photoDetails'] }, likes: { [key: string]: boolean }, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, closeModal: () => void }) => {
 
   return (
     <Modal show={modalDetails.show}>
@@ -26,15 +26,21 @@ const PictureModal = ({ modalDetails, closeModal }: { modalDetails: { show: bool
 
           {/* image side */}
           <section className='relative h-full col-span-2'>
-            <Image className='rounded-tl-lg rounded-bl-lg' src={modalDetails?.details?.title} loader={() => modalDetails?.details?.url} layout='fill' objectFit='cover' />
+            <Image placeholder='blur' className='rounded-tl-lg rounded-bl-lg' src={modalDetails?.details?.title} loader={() => modalDetails?.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
           </section>
 
           {/* details side */}
-          <section className='relative flex justify-center items-center pr-5'>
+          <section className='relative flex justify-center items-center pr-5 overflow-y-auto'>
             <div>
+              {/* description */}
               <h1 className='font-bold text-4xl'>{modalDetails.details?.title}</h1>
               <span className='text-sm'>{modalDetails.details?.date}</span>
-              <p className='mt-6'>{modalDetails.details?.explanation}</p>
+              <p className='mt-6 overflow-auto'>{modalDetails.details?.explanation}</p>
+
+              {/* heart icon */}
+              <div title="Like" className='py-4' onClick={(e) => onLikeClick(modalDetails.details.hdurl, e)}>
+                <i className={`${likes[modalDetails?.details?.hdurl] ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} hover: text-4xl cursor-pointer transition-colors`}></i>
+              </div>
             </div>
 
             {/* x icon */}
