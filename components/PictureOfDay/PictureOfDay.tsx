@@ -13,7 +13,7 @@ interface imageResponse {
   show: boolean
 }
 
-const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: imageResponse, isLiked: boolean, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void }) => {
+const PictureOfDay = ({ imageResponse, isLiked, onLikeClick, scrollToGallery }: { imageResponse: imageResponse, isLiked: boolean, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, scrollToGallery: () => void }) => {
 
   //to show information
   const [showPictureofDay, setShowPictureofDay] = React.useState(imageResponse.show);
@@ -33,11 +33,14 @@ const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: 
           </div>
           <div className='flex justify-end items-end'>
             <div className='flex'>
+              <div className='rounded-full p-3 bg-[#181A18] h-max mr-2 drop-shadow-2xl cursor-pointer' onClick={scrollToGallery}>
+                <i className={`uil uil-arrow-down text-4xl text-white`}></i>
+              </div>
               <div className='rounded-full p-3 bg-[#181A18] h-max mr-2 drop-shadow-2xl cursor-pointer' onClick={() => setShowPictureofDay(!showPictureofDay)}>
                 <i className={`${showPictureofDay ? 'uil uil-eye-slash' : 'uil uil-eye'} text-4xl text-white`}></i>
               </div>
               <div className='rounded-full p-3 bg-[#181A18] h-max drop-shadow-2xl cursor-pointer' onClick={(e) => onLikeClick(imageResponse.hdurl, e)}>
-                <i className={`${isLiked ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} text-4xl text-white transition-colors`}></i>
+                <i className={`${isLiked ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart text-white'} text-4xl  transition-colors`}></i>
               </div>
             </div>
           </div>

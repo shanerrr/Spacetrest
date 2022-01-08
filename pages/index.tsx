@@ -28,6 +28,8 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
   const [likes, setLikes] = React.useState<{ [key: string]: boolean }>({});
   const [photos, setPhotos] = React.useState({ loading: true, list: Array<IState['imageResponse']>() });
 
+  const galleryRef = React.useRef<HTMLHeadingElement | null>(null);
+
   //handler that deals with clicking the like button
   const likeHandler = (url: string, event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation()
@@ -36,6 +38,11 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
 
     //write to local storage also so we can hydrate state again with previous likes when user refreshes/comes back.
     localStorage.setItem('likes', JSON.stringify({ ...likes, [url]: !!!likes[url] }))
+  }
+
+  //handler to scroll to gallery
+  const scrollIntoView = () => {
+    galleryRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   //on component mount, fetch local storage on likes and fetch the other images
@@ -49,7 +56,7 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
     }
 
     setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []);
-    // fetchPhotos();
+    fetchPhotos();
 
   }, []);
 
@@ -64,16 +71,16 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
       <main className='snap-y snap-mandatory h-max bg-[#181A18]'>
         {/* our main page (Picture of the day)*/}
         <section className='h-screen relative align-middle snap-center'>
-          <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} />
+          <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} scrollToGallery={scrollIntoView} />
         </section>
 
         {/* our gallery component */}
-        <section className='h-max relative align-middle snap-center'>
+        <section ref={galleryRef} className='h-max relative align-middle snap-center'>
           <PictureList listLoading={photos.loading} list={photos.list} likes={likes} onLikeClick={likeHandler} />
         </section>
 
 
-        {!photos.loading && <footer className='mb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
+        {!photos.loading && <footer className='pb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
           <a className='flex justify-center items-center' href="https://github.com/shanerrr" target="_blank" rel="noopener noreferrer">
             <Image src='/github.png' height={32} width={32} />
           </a>

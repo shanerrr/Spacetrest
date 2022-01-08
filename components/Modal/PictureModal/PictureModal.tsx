@@ -35,7 +35,7 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, closeModal }: { modalD
               {/* description */}
               <h1 className='font-bold text-4xl'>{modalDetails.details?.title}</h1>
               <span className='text-sm'>{modalDetails.details?.date}</span>
-              <p className='mt-6 overflow-auto'>{modalDetails.details?.explanation}</p>
+              <p className='mt-6 overflow-y-auto h-2/4'>{modalDetails.details?.explanation}</p>
 
               {/* heart icon */}
               <div title="Like" className='py-4' onClick={(e) => onLikeClick(modalDetails.details.hdurl, e)}>
