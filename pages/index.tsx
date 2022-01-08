@@ -28,7 +28,8 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
   const [photos, setPhotos] = React.useState({ loading: true, list: Array<IState['imageResponse']>() });
 
   //handler that deals with clicking the like button
-  const likeHandler = (url: string) => {
+  const likeHandler = (url: string, event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation()
     //update the state
     setLikes({ ...likes, [url]: !!!likes[url] });
 
@@ -54,7 +55,7 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
   return (
     <>
       <Head>
-        <title>The Universe in Motion</title>
+        <title>Spacestagram: Image-sharing from the final frontier</title>
         <meta name="description" content="Images about the universe" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -62,7 +63,7 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
       <main className='snap-y snap-mandatory h-max'>
         {/* our main page (Picture of the day)*/}
         <section className='h-screen relative align-middle snap-center'>
-          <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string) => likeHandler(url)} />
+          <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} />
         </section>
 
         {/* our gallery component */}

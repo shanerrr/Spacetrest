@@ -13,7 +13,7 @@ interface imageResponse {
   show: boolean
 }
 
-const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: imageResponse, isLiked: boolean, onLikeClick: (url: string) => void }) => {
+const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: imageResponse, isLiked: boolean, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void }) => {
 
   //to show information
   const [showPictureofDay, setShowPictureofDay] = React.useState(imageResponse.show);
@@ -34,7 +34,7 @@ const PictureOfDay = ({ imageResponse, isLiked, onLikeClick }: { imageResponse: 
               <div className='rounded-full p-3 bg-white h-max mr-2 drop-shadow-2xl cursor-pointer' onClick={() => setShowPictureofDay(!showPictureofDay)}>
                 <i className={`${showPictureofDay ? 'uil uil-eye-slash' : 'uil uil-eye'} text-4xl`}></i>
               </div>
-              <div className='rounded-full p-3 bg-white h-max drop-shadow-2xl cursor-pointer' onClick={() => onLikeClick(imageResponse.hdurl)}>
+              <div className='rounded-full p-3 bg-white h-max drop-shadow-2xl cursor-pointer' onClick={(e) => onLikeClick(imageResponse.hdurl, e)}>
                 <i className={`${isLiked ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} text-4xl transition-colors`}></i>
               </div>
             </div>
