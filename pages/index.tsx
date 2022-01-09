@@ -26,9 +26,23 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
 
   //state that captures our likes (will be using a set using url as unique key)
   const [likes, setLikes] = React.useState<{ [key: string]: boolean }>({});
+  //state that captures our results from endpoint
   const [photos, setPhotos] = React.useState({ loading: true, list: Array<IState['imageResponse']>() });
+  //state that captures our infinte scroll page number pagination.
+  const [pageNumber, setPageNumber] = React.useState(0);
 
+  //ref that captures our gallery element
   const galleryRef = React.useRef<HTMLHeadingElement | null>(null);
+
+  //deals with our infinite scroll api calls
+  const observer = React.useRef();
+  const lastGalleryItem = React.useCallback(node => {
+    if (photos.loading) return;
+    if (observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) setPageNumber(prevPageNumber => prevPageNumber + 1);
+    }))
+      if (node) observer.current.observe(node);
+  }, [photos.loading])
 
   //handler that deals with clicking the like button
   const likeHandler = (url: string, event: React.MouseEvent<HTMLElement>) => {
@@ -41,24 +55,19 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
   }
 
   //handler to scroll to gallery
-  const scrollIntoView = () => {
-    galleryRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const scrollIntoView = () => galleryRef.current?.scrollIntoView({ behavior: 'smooth' });
 
-  //on component mount, fetch local storage on likes and fetch the other images
+  //on component mount, fetch local storage on likes
+  React.useEffect(() => setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []), []);
+
+  //on component mount, fetch the other images
+  //api call getting all images of days for 30 days
   React.useEffect(() => {
-
-    //api call getting all images of days for 30 days
-    const fetchPhotos = async () => {
-      const startDate = new Date()
-      new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - 2, startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 1).toISOString().split('T')[0])
-        .then(res => setPhotos({ ...photos, loading: false, list: res.data.map((v: IState['imageResponse']) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: IState['imageResponse']) => image.media_type === "image").reverse() }))
-    }
-
-    setLikes(localStorage.hasOwnProperty('likes') ? JSON.parse(String(localStorage.getItem('likes'))) : []);
-    fetchPhotos();
-
-  }, []);
+    setPhotos({ ...photos, loading: true });
+    const startDate = new Date();
+    new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - (pageNumber + 1), startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth() - pageNumber, startDate.getDate() - 1).toISOString().split('T')[0])
+      .then(res => setPhotos(prev => ({ loading: false, list: [...prev.list, ...res.data.map((v: IState['imageResponse']) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: IState['imageResponse']) => image.media_type === "image").reverse()] })))
+  }, [pageNumber]);
 
   return (
     <>
@@ -76,15 +85,14 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
 
         {/* our gallery component */}
         <section ref={galleryRef} className='h-max relative align-middle snap-center'>
-          <PictureList listLoading={photos.loading} list={photos.list} likes={likes} onLikeClick={likeHandler} />
+          <PictureList listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} />
         </section>
 
-
-        {!photos.loading && <footer className='pb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
+        {/* {!photos.loading && <footer className='pb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
           <a className='flex justify-center items-center' href="https://github.com/shanerrr" target="_blank" rel="noopener noreferrer">
             <Image src='/github.png' height={32} width={32} />
           </a>
-        </footer>}
+        </footer>} */}
 
       </main>
     </>

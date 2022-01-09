@@ -14,7 +14,7 @@ module.exports = {
         loader: {
           '0%': { transform: 'rotate(0deg)' },
           '50%': { opacity: '50%' },
-          '100%': { transform: 'rotate(359deg);' }
+          '100%': { transform: 'rotate(360deg);' }
         }
       },
       animation: {

@@ -15,12 +15,23 @@ interface imageResponse {
 
 const PictureOfDay = ({ imageResponse, isLiked, onLikeClick, scrollToGallery }: { imageResponse: imageResponse, isLiked: boolean, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, scrollToGallery: () => void }) => {
 
-  //to show information
+  //to show information & deal with parralax
   const [showPictureofDay, setShowPictureofDay] = React.useState(imageResponse.show);
+  const [offsetY, setOffsetY] = React.useState(0);
+
+  // callback to update scroll position
+  const handleScroll = () => setOffsetY(window.pageYOffset);
+
+  //listener that deals with parralx effect
+  React.useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
-      <div className={`${showPictureofDay ? 'h-[94%]' : 'h-full'} relative`}>
+      <div style={{ transform: `translateY(${offsetY * 0.4}px)` }} className={`${showPictureofDay ? 'h-[94%]' : 'h-full'} relative`}>
         <Image className={`${showPictureofDay ? 'rounded-b-[30px]' : 'rounded-none'}  transition-all duration-300`} placeholder='blur' src={imageResponse.title} loader={() => imageResponse.hdurl} layout='fill' objectFit='cover' quality={100} priority={true} blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
       </div>
 
