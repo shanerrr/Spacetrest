@@ -12,7 +12,7 @@ const PictureList = ({ list, listLoading, lastGalleryItem, likes, onLikeClick, h
   return (
     <>
       <section className="container mx-auto relative h-max">
-        <div className='grid grid-flow-row-dense grid-cols-4 auto-rows-auto gap-5 pt-10'>
+        <div className='grid grid-flow-row-dense grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-auto gap-5 pt-10 px-2 md:px-0'>
           {
             list.map((photo, idx: number) => <PictureListItem key={idx} photo={{ ...photo, idx: idx }} lastGalleryItem={list.length - 1 === idx ? lastGalleryItem : () => null} likes={likes} onLikeClick={onLikeClick} setModalDetails={(details: image) => setModalDetails({ ...modalDetails, show: true, details, length: list.length })} />)
           }

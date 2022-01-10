@@ -63,14 +63,14 @@ const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageRespon
         <link rel="icon" href="/favicon.png" />
       </Head>
 
-      <main className='snap-y snap-mandatory h-max bg-[#181A18]'>
+      <main className='h-max bg-[#181A18]'>
         {/* our main page (Picture of the day)*/}
-        <section className='h-screen relative align-middle snap-center'>
+        <section className='h-screen relative'>
           <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} scrollToGallery={scrollIntoView} />
         </section>
 
         {/* our gallery component */}
-        <section ref={galleryRef} className='h-max relative align-middle snap-center'>
+        <section ref={galleryRef} className='h-max relative'>
           <PictureList listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} hostURI={hostURI} />
         </section>
 

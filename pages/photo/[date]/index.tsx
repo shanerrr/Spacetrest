@@ -30,7 +30,7 @@ const PhotoOfDate = ({ imageResponse }: { imageResponse: image }) => {
       <Head>
         <title>{imageResponse.date} Picture of the day</title>
         <meta name="description" content="Images about the universe" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
 
       <main className='snap-y snap-mandatory h-max bg-[#181A18]'>
