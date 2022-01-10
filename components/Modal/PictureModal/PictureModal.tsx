@@ -4,27 +4,20 @@ import Modal from '..';
 
 import type { image } from '../../../types/image.interface'
 
-const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal }: { modalDetails: { show: boolean, details: image, length: number }, likes: { [key: string]: boolean }, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, arrowClick: (isLeftClick: boolean, index: number) => void, closeModal: () => void }) => {
+const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal }: { modalDetails: { show: boolean, details: image, length: number, hostURI: string }, likes: { [key: string]: boolean }, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, arrowClick: (isLeftClick: boolean, index: number) => void, closeModal: () => void }) => {
 
+  //refs for animations
   const cardRef = React.useRef(null);
   const leftArrowRef = React.useRef(null);
   const rightArrowRef = React.useRef(null);
+  //modal background
+  const backdropRef = React.useRef(null);
+
+  const [isCopied, setIsCopied] = React.useState(false);
 
   //animations for dekstop and mobile
   const animationOpen = false ? { duration: .5, bottom: 0 } : { duration: 0.5, top: '50%', left: '50%' };
   const animationClose = false ? { duration: .5, opacity: 0, bottom: -500, } : { duration: 0.5, top: '125%', left: '50%', opacity: 0 };
-
-  //modal background
-  const backdropRef = React.useRef(null);
-
-  React.useEffect(() => {
-    if (modalDetails.show) {
-      //modal open animation
-      gsap.to(cardRef.current, { ...animationOpen, ease: Power3.easeInOut })
-      gsap.to(leftArrowRef.current, { duration: .5, left: '5%', ease: Power3.easeInOut })
-      gsap.to(rightArrowRef.current, { duration: .5, right: '5%', ease: Power3.easeInOut })
-    }
-  }, [modalDetails.show]);
 
   //if they click x button
   const closeModalHandler = () => {
@@ -39,6 +32,38 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
     cardRef.current = null;
     gsap.to(backdropRef.current, { duration: .3, opacity: 0, ease: Power3.easeInOut, onComplete: closeModal });
   }
+
+  const copyTextToClipboard = async (text: string) => {
+    if ('clipboard' in navigator) return await navigator.clipboard.writeText(text);
+    else return document.execCommand('copy', true, text);
+  }
+
+  // onClick handler function for the copy button
+  const handleCopyClick = (copyText: string) => {
+    // Asynchronously call copyTextToClipboard
+    copyTextToClipboard(copyText)
+      .then(() => {
+        // If successful, update the isCopied state value
+        setIsCopied(true);
+        setTimeout(() => {
+          setIsCopied(false);
+        }, 1500);
+      })
+      .catch((err) => {
+        setIsCopied(false);
+        console.log(err);
+      });
+  }
+
+  //to attach the animation upon component mount
+  React.useEffect(() => {
+    if (modalDetails.show) {
+      //modal open animation
+      gsap.to(cardRef.current, { ...animationOpen, ease: Power3.easeInOut })
+      gsap.to(leftArrowRef.current, { duration: .5, left: '5%', ease: Power3.easeInOut })
+      gsap.to(rightArrowRef.current, { duration: .5, right: '5%', ease: Power3.easeInOut })
+    }
+  }, [modalDetails.show]);
 
   return (
     <Modal show={modalDetails.show} backdropRef={backdropRef}>
@@ -75,8 +100,9 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
               <div title="Like" onClick={(e) => onLikeClick(modalDetails.details.hdurl, e)}>
                 <i className={`${likes[modalDetails?.details?.hdurl] ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} hover:text-red-900 text-4xl cursor-pointer transition-colors`}></i>
               </div>
-              <div title="Share" onClick={(e) => onLikeClick(modalDetails.details.hdurl, e)}>
-                <i className="pl-3 uil uil-share text-4xl cursor-pointer"></i>
+              <div title="Share" className='relative' onClick={(e) => handleCopyClick(`${modalDetails.hostURI}/photo/${modalDetails.details.date}`)}>
+                {isCopied && <span className='pr-3 absolute -left-5 -top-10 w-max p-2 bg-blue-900 rounded-[10px] text-white font-medium animate-fadeInBottom'>Link copied!</span>}
+                <i className="pl-3 uil uil-share text-4xl cursor-pointer hover:text-blue-900"></i>
               </div>
             </div>
           </section>

@@ -8,7 +8,7 @@ import { ImageService } from '../services/image';
 import type { image } from '../types/image.interface';
 import type { NextPage, GetServerSideProps } from 'next';
 
-const Home: NextPage<{ imageResponse: image }> = ({ imageResponse }: { imageResponse: image }) => {
+const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageResponse, hostURI }: { imageResponse: image, hostURI: string }) => {
 
   //state that captures our likes (will be using a set using url as unique key)
   const [likes, setLikes] = React.useState<{ [key: string]: boolean }>({});
@@ -71,7 +71,7 @@ const Home: NextPage<{ imageResponse: image }> = ({ imageResponse }: { imageResp
 
         {/* our gallery component */}
         <section ref={galleryRef} className='h-max relative align-middle snap-center'>
-          <PictureList listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} />
+          <PictureList listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} hostURI={hostURI} />
         </section>
 
         {/* {!photos.loading && <footer className='pb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
@@ -87,12 +87,13 @@ const Home: NextPage<{ imageResponse: image }> = ({ imageResponse }: { imageResp
 
 export default Home;
 
-//server data fetching
-export const getServerSideProps: GetServerSideProps = async () => {
+//server data fetching (getting picture of day from server)
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
       imageResponse: { ...(await new ImageService().getPictureOfDay()).data, show: true },
+      hostURI: ctx.req.headers.host
     },
   };
 };

@@ -4,10 +4,10 @@ import PictureModal from '../Modal/PictureModal';
 
 import type { image } from '../../types/image.interface';
 
-const PictureList = ({ list, listLoading, lastGalleryItem, likes, onLikeClick }: { list: Array<image>, listLoading: boolean, lastGalleryItem: (node: HTMLElement | null) => void, likes: { [key: string]: boolean }, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void }) => {
+const PictureList = ({ list, listLoading, lastGalleryItem, likes, onLikeClick, hostURI }: { list: Array<image>, listLoading: boolean, lastGalleryItem: (node: HTMLElement | null) => void, likes: { [key: string]: boolean }, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, hostURI: string }) => {
 
   //local state
-  const [modalDetails, setModalDetails] = React.useState<{ show: boolean, details: image, length: number }>({ show: false, details: list[0], length: list.length });
+  const [modalDetails, setModalDetails] = React.useState<{ show: boolean, details: image, length: number, hostURI: string }>({ show: false, details: list[0], length: list.length, hostURI: hostURI });
 
   return (
     <>
