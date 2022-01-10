@@ -14,6 +14,7 @@ export class ImageService {
 
   /**
    * @param startDate optional param 
+   * @param endDate optional param 
    * @returns object of image
    */
   getPictureOfDay(startDate: string | null = null, endDate: string | null = null) {
@@ -21,6 +22,18 @@ export class ImageService {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       url: this.uri + this.config.pictureOfDay + `${startDate ? `&start_date=${startDate}&end_date=${endDate}` : ''}`
+    });
+  }
+
+  /**
+   * @param startDate optional param 
+   * @returns object of image
+   */
+  getSpecificImageOfDay(date: string | string[]) {
+    return axios({
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      url: this.uri + this.config.pictureOfDay + `&date=${date}`
     });
   }
 }

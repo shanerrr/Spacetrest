@@ -36,7 +36,7 @@ const PhotoOfDate = ({ imageResponse }: { imageResponse: image }) => {
       <main className='snap-y snap-mandatory h-max bg-[#181A18]'>
         {/* our main page (Picture of the day)*/}
         <section className='h-screen relative align-middle snap-center'>
-          <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} scrollToGallery={() => null} />
+          <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} scrollToGallery={undefined} />
         </section>
 
       </main>
@@ -50,9 +50,20 @@ export default PhotoOfDate;
 //server data fetching
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  return {
-    props: {
-      imageResponse: { ...(await new ImageService().getPictureOfDay()).data, show: true },
-    },
-  };
+  if (ctx.params?.date) {
+    return {
+      props: {
+        imageResponse: { ...(await new ImageService().getSpecificImageOfDay(ctx.params.date)).data, show: true },
+      },
+    };
+  }
+  else {
+    return {
+      props: {},
+      redirect: {
+        permanent: 'false',
+        destination: '/'
+      }
+    };
+  }
 };

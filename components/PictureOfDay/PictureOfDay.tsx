@@ -1,11 +1,10 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import type { image } from '../../types/image.interface';
 
-const PictureOfDay = ({ imageResponse, isLiked, onLikeClick, scrollToGallery }: { imageResponse: image, isLiked: boolean, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, scrollToGallery: () => void }) => {
-
-  console.log(imageResponse)
+const PictureOfDay = ({ imageResponse, isLiked, onLikeClick, scrollToGallery }: { imageResponse: image, isLiked: boolean, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, scrollToGallery: (() => void) | undefined }) => {
 
   //to show information & deal with parralax
   const [showPictureofDay, setShowPictureofDay] = React.useState(imageResponse.show);
@@ -42,15 +41,26 @@ const PictureOfDay = ({ imageResponse, isLiked, onLikeClick, scrollToGallery }: 
       <section className='absolute p-8 bottom-0 drop-shadow-2xl animate-fadeInBottom'>
         <div className='grid grid-cols-2 gap-4'>
           <div className={`bg-black/40 rounded-lg drop-shadow-2xl p-6 ${showPictureofDay ? 'visible' : 'invisible'}`}>
-            <span className='text-white'>{new Date().toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span className='text-white'>{new Date(imageResponse.date).toLocaleDateString("en", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</span>
             <h1 className='font-bold text-white text-7xl align-middle underline pt-1'><a href={imageResponse.hdurl} target='_blank' rel="noreferrer">{imageResponse.title}</a></h1>
             <p className='text-white font-medium pt-7'>{imageResponse.explanation}</p>
           </div>
           <div className='flex justify-end items-end'>
             <div className='flex'>
-              <div className='rounded-full p-3 bg-[#181A18] h-max mr-2 drop-shadow-2xl border-white border-2 hover:border-green-500 transition-all duration-200 cursor-pointer' onClick={scrollToGallery}>
-                <i className={`uil uil-arrow-down text-4xl text-white`}></i>
-              </div>
+              {
+                scrollToGallery ?
+                  <div title='Scroll down' className='rounded-full p-3 bg-[#181A18] h-max mr-2 drop-shadow-2xl border-white border-2 hover:border-green-500 transition-all duration-200 cursor-pointer' onClick={scrollToGallery}>
+                    <i className={`uil uil-arrow-down text-4xl text-white`}></i>
+                  </div>
+                  :
+                  <Link href="/">
+                    <a>
+                      <div title='Home' className='rounded-full p-3 bg-[#181A18] h-max mr-2 drop-shadow-2xl border-white border-2 hover:border-green-500 transition-all duration-200 cursor-pointer' onClick={scrollToGallery}>
+                        <i className={`"uil uil-home text-4xl text-white`}></i>
+                      </div>
+                    </a>
+                  </Link>
+              }
               <div className='rounded-full p-3 bg-[#181A18] h-max mr-2 drop-shadow-2xl border-white border-2 hover:border-blue-500 transition-all duration-200 cursor-pointer' onClick={() => setShowPictureofDay(!showPictureofDay)}>
                 <i className={`${showPictureofDay ? 'uil uil-eye-slash' : 'uil uil-eye'} text-4xl text-white`}></i>
               </div>
