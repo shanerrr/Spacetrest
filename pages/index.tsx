@@ -2,32 +2,18 @@ import React from 'react';
 import Head from 'next/head';
 import PictureOfDay from '../components/PictureOfDay';
 import PictureList from '../components/PictureList';
-import Image from 'next/image';
 
-import type { NextPage, GetServerSideProps } from 'next';
 import { ImageService } from '../services/image';
 
-interface IState {
-  imageResponse: {
-    copyright: string,
-    date: string,
-    explanation: string,
-    hdurl: string,
-    media_type: string,
-    service_version: string,
-    title: string,
-    url: string,
-    show: boolean,
-    colLength: number
-  }
-}
+import type { image } from '../types/image.interface';
+import type { NextPage, GetServerSideProps } from 'next';
 
-const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageResponse }: { imageResponse: IState['imageResponse'] }) => {
+const Home: NextPage<{ imageResponse: image }> = ({ imageResponse }: { imageResponse: image }) => {
 
   //state that captures our likes (will be using a set using url as unique key)
   const [likes, setLikes] = React.useState<{ [key: string]: boolean }>({});
   //state that captures our results from endpoint
-  const [photos, setPhotos] = React.useState({ loading: true, list: Array<IState['imageResponse']>() });
+  const [photos, setPhotos] = React.useState({ loading: true, list: Array<image>() });
   //state that captures our infinte scroll page number pagination.
   const [pageNumber, setPageNumber] = React.useState(0);
 
@@ -35,8 +21,8 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
   const galleryRef = React.useRef<HTMLHeadingElement | null>(null);
 
   //deals with our infinite scroll api calls
-  const observer = React.useRef();
-  const lastGalleryItem = React.useCallback(node => {
+  const observer = React.useRef<IntersectionObserver | null>(null);
+  const lastGalleryItem = React.useCallback((node: HTMLElement | null) => {
     if (photos.loading) return;
     if (observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting) setPageNumber(prevPageNumber => prevPageNumber + 1);
@@ -66,15 +52,15 @@ const Home: NextPage<{ imageResponse: IState['imageResponse'] }> = ({ imageRespo
     setPhotos({ ...photos, loading: true });
     const startDate = new Date();
     new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - (pageNumber + 1), startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth() - pageNumber, startDate.getDate() - 1).toISOString().split('T')[0])
-      .then(res => setPhotos(prev => ({ loading: false, list: [...prev.list, ...res.data.map((v: IState['imageResponse']) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: IState['imageResponse']) => image.media_type === "image").reverse()] })))
+      .then(res => setPhotos(prev => ({ loading: false, list: [...prev.list, ...res.data.map((v: image) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: image) => image.media_type === "image").reverse()] })))
   }, [pageNumber]);
 
   return (
     <>
       <Head>
-        <title>Spacestagram: Image-sharing from the final frontier</title>
+        <title>Spacetrest: Image-sharing from the final frontier</title>
         <meta name="description" content="Images about the universe" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
 
       <main className='snap-y snap-mandatory h-max bg-[#181A18]'>

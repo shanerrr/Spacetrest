@@ -10,7 +10,7 @@ type ReactNode =
   | null
   | undefined;
 
-const Modal = ({ children, show }: { children: ReactNode, show: boolean }) => {
+const Modal = ({ children, show, backdropRef }: { children: ReactNode, show: boolean, backdropRef: any }) => {
 
   const ref = React.useRef<HTMLHeadingElement | null>(null);
   const [mounted, setMounted] = React.useState(false);
@@ -20,10 +20,23 @@ const Modal = ({ children, show }: { children: ReactNode, show: boolean }) => {
     setMounted(true);
   }, []);
 
+  React.useEffect(() => {
+    if (show) {
+      TweenLite.to(
+        backdropRef.current,
+        .5,
+        {
+          opacity: 1,
+          ease: Power3.easeInOut
+        }
+      )
+    }
+  }, [children]);
+
   if (!show || !mounted) return null;
 
   return createPortal(
-    <main className="top-0 left-0 right-0 bottom-0 fixed z-10 bg-black/50">
+    <main ref={backdropRef} className="top-0 left-0 right-0 bottom-0 fixed z-10 bg-black/75 opacity-0">
       {children}
     </main>,
     ref.current as HTMLElement
