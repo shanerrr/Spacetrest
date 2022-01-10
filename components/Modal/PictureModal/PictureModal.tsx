@@ -2,6 +2,8 @@ import React from 'react';
 import Image from 'next/image';
 import Modal from '..';
 
+import useIsSmallDevice from '../../../hooks/useIsSmallDevice';
+
 import type { image } from '../../../types/image.interface'
 
 const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal }: { modalDetails: { show: boolean, details: image, length: number, hostURI: string }, likes: { [key: string]: boolean }, onLikeClick: (url: string, event: React.MouseEvent<HTMLElement>) => void, arrowClick: (isLeftClick: boolean, index: number) => void, closeModal: () => void }) => {
@@ -14,10 +16,13 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
   const backdropRef = React.useRef(null);
 
   const [isCopied, setIsCopied] = React.useState(false);
+  const isSmallDevice = useIsSmallDevice();
+
+  console.log(isSmallDevice)
 
   //animations for dekstop and mobile
-  const animationOpen = false ? { duration: .5, bottom: 0 } : { duration: 0.5, top: '50%', left: '50%' };
-  const animationClose = false ? { duration: .5, opacity: 0, bottom: -500, } : { duration: 0.5, top: '125%', left: '50%', opacity: 0 };
+  const animationOpen = isSmallDevice ? { duration: .5, bottom: 0 } : { duration: 0.5, top: '50%', left: '50%' };
+  const animationClose = isSmallDevice ? { duration: .5, opacity: 0, bottom: -500, } : { duration: 0.5, top: '125%', left: '50%', opacity: 0 };
 
   //if they click x button
   const closeModalHandler = () => {
@@ -49,10 +54,7 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
           setIsCopied(false);
         }, 1500);
       })
-      .catch((err) => {
-        setIsCopied(false);
-        console.log(err);
-      });
+      .catch(() => setIsCopied(false))
   }
 
   //to attach the animation upon component mount
@@ -68,17 +70,18 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
   return (
     <Modal show={modalDetails.show} backdropRef={backdropRef}>
 
-      {/* back button - not on first photo */}
+      {/* back button - exclude on first photo */}
       <div ref={leftArrowRef} className={`absolute left-0 top-1/2 cursor-pointer z-30 ${modalDetails.details?.idx === 0 ? 'invisible' : 'visible'}`} onClick={() => arrowClick(true, modalDetails.details?.idx)}>
         <i className="uis uis-arrow-circle-left text-white text-6xl"></i>
       </div>
 
-      <main ref={cardRef} className='bg-white absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 h-3/4 w-3/4 rounded-[10px]'>
+      <main ref={cardRef} className='bg-white absolute -bottom-96 h-5/6 rounded-t-[10px]'>
+        {/* <main ref={cardRef} className='bg-white absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 h-3/4 w-3/4 rounded-[10px]'> */}
 
-        <div className='grid grid-cols-3 h-[100%] gap-6'>
+        <div className='grid grid-cols-3 h-full gap-6'>
           {/* image side */}
           <section className='relative h-full col-span-2'>
-            <Image placeholder='blur' className='rounded-tl-lg rounded-bl-lg' src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
+            <Image placeholder='blur' className='rounded-none lg:rounded-t-[10px]' src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
           </section>
 
           {/* details side */}
@@ -110,10 +113,10 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
         </div>
       </main>
 
+      {/* next button - exclude on last photo of list */}
       <div ref={rightArrowRef} className={`absolute right-0 top-1/2 cursor-pointer z-30 ${modalDetails.details?.idx === modalDetails.length - 1 ? 'invisible' : 'visible'}`} onClick={() => arrowClick(false, modalDetails.details?.idx)}>
         <i className="uis uis-arrow-circle-right text-white text-6xl"></i>
       </div>
-
 
     </Modal>
   )

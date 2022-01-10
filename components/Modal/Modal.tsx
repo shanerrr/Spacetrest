@@ -15,22 +15,15 @@ const Modal = ({ children, show, backdropRef }: { children: ReactNode, show: boo
   const ref = React.useRef<HTMLHeadingElement | null>(null);
   const [mounted, setMounted] = React.useState(false);
 
+  //sets portal element and ensures mount so animation works well
   React.useEffect(() => {
     ref.current = document.querySelector('#modal-portal');
     setMounted(true);
   }, []);
 
+  //sets animation open modal open everytime
   React.useEffect(() => {
-    if (show) {
-      TweenLite.to(
-        backdropRef.current,
-        .5,
-        {
-          opacity: 1,
-          ease: Power3.easeInOut
-        }
-      )
-    }
+    if (show) gsap.to(backdropRef.current, { duration: 0.5, opacity: 1, ease: Power3.easeInOut })
   }, [children]);
 
   if (!show || !mounted) return null;
