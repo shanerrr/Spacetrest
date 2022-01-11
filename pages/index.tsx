@@ -99,10 +99,23 @@ export default Home;
 //server data fetching (getting picture of day from server)
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  return {
-    props: {
-      imageResponse: { ...(await new ImageService().getPictureOfDay()).data, show: true },
-      hostURI: ctx.req.headers.host
-    },
-  };
+  return new ImageService().getPictureOfDay()
+    .then(res => {
+      return {
+        props: {
+          imageResponse: { ...res.data, show: true },
+          hostURI: ctx.req.headers.host
+        },
+      };
+    })
+    .catch(() => {
+      return {
+        props: {},
+        redirect: {
+          permanent: 'false',
+          destination: '/error'
+        }
+      };
+    })
+
 };
