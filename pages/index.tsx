@@ -82,13 +82,7 @@ const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageRespon
         <section ref={galleryRef} className='h-max relative'>
           <PictureList error={photos.error} errorHandler={() => setPhotos({ ...photos, error: false })} listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} hostURI={hostURI} />
         </section>
-
-        {/* {!photos.loading && <footer className='pb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
-          <a className='flex justify-center items-center' href="https://github.com/shanerrr" target="_blank" rel="noopener noreferrer">
-            <Image src='/github.png' height={32} width={32} />
-          </a>
-        </footer>} */}
-
+        
       </main>
     </>
   )
