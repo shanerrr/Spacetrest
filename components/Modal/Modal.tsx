@@ -23,8 +23,8 @@ const Modal = ({ children, show, backdropRef }: { children: ReactNode, show: boo
 
   //sets animation open modal open everytime
   React.useEffect(() => {
-    if (show) gsap.to(backdropRef.current, { duration: 0.5, opacity: 1, ease: Power3.easeInOut })
-  }, [children]);
+    if (show) gsap.to(backdropRef.current, { duration: 0.3, opacity: 1, ease: Power3.easeInOut })
+  }, [children, show]);
 
   if (!show || !mounted) return null;
 

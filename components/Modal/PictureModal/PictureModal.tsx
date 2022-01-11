@@ -78,7 +78,7 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
         <div className='grid grid-cols-1 grid-rows-3 gap-0 h-full md:grid-cols-3 md:grid-rows-none md:gap-6'>
           {/* image side */}
           <section className='relative h-full col-span-2 row-span-1'>
-            <Image placeholder='blur' className='rounded-t-[10px] md:rounded-l-[10px] md:rounded-r-none' src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
+            <Image placeholder='blur' className='rounded-t-[10px] md:rounded-l-[10px] md:rounded-r-none' alt={modalDetails.details?.date + ' APOD'} src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
           </section>
 
           {/* details side */}

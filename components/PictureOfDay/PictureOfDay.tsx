@@ -25,7 +25,7 @@ const PictureOfDay = ({ imageResponse, isLiked, onLikeClick, scrollToGallery }: 
       <div style={{ transform: `translateY(${offsetY * 0.4}px)` }} className={`${showPictureofDay ? 'h-[94%]' : 'h-full'} relative`}>
         {
           imageResponse.media_type === 'image' ?
-            <Image className={`${showPictureofDay ? 'rounded-b-[30px]' : 'rounded-none'} transition-all duration-300`} placeholder='blur' src={imageResponse.title} loader={() => imageResponse.hdurl} layout='fill' objectFit='cover' quality={100} priority={true} blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
+            <Image alt={imageResponse.date + ' APOD'} className={`${showPictureofDay ? 'rounded-b-[30px]' : 'rounded-none'} transition-all duration-300`} placeholder='blur' src={imageResponse.title} loader={() => imageResponse.hdurl} layout='fill' objectFit='cover' quality={100} priority={true} blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
             :
             <iframe
               className='rounded-b-[30px]'
