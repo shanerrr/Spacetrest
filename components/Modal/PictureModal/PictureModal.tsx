@@ -15,19 +15,21 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
   //modal background
   const backdropRef = React.useRef(null);
 
-  const [isCopied, setIsCopied] = React.useState(false);
+  //custom hook that checks viewport width
   const isSmallDevice = useIsSmallDevice();
 
+  //state to send user if link was copied
+  const [isCopied, setIsCopied] = React.useState(false);
   //animations for dekstop and mobile
-  const animationOpen = isSmallDevice ? { duration: .5, bottom: 0 } : { duration: 0.5, top: '50%', left: '50%' };
-  const animationClose = isSmallDevice ? { duration: .5, opacity: 0, bottom: -500, } : { duration: 0.5, top: '125%', left: '50%', opacity: 0 };
+  const animationsOpenMap = { SMALL: { duration: .5, bottom: 0 }, LARGE: { duration: 0.5, top: '50%', left: '50%' } };
+  const animationsCloseMap = { SMALL: { duration: .5, opacity: 0, bottom: -500, }, LARGE: { duration: 0.5, top: '125%', left: '50%', opacity: 0 } };
 
   //if they click x button
   const closeModalHandler = () => {
     //close modal animation
     gsap.to(leftArrowRef.current, { duration: .5, left: '-100%', ease: Power3.easeInOut, })
     gsap.to(rightArrowRef.current, { duration: .5, right: '-100%', ease: Power3.easeInOut, })
-    gsap.to(cardRef.current, { ...animationClose, ease: Power3.easeInOut, onComplete: modalBackdropAnimation })
+    gsap.to(cardRef.current, { ...animationsCloseMap[isSmallDevice ? 'SMALL' : 'LARGE'], ease: Power3.easeInOut, onComplete: modalBackdropAnimation })
   }
 
   //this is to animate modal backdrop as a part of the animation cycle.
@@ -59,11 +61,11 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
   React.useEffect(() => {
     if (modalDetails.show) {
       //modal open animation
-      gsap.to(cardRef.current, { ...animationOpen, ease: Power3.easeInOut })
+      gsap.to(cardRef.current, { ...animationsOpenMap[isSmallDevice ? 'SMALL' : 'LARGE'], ease: Power3.easeInOut })
       gsap.to(leftArrowRef.current, { duration: .5, left: '5%', ease: Power3.easeInOut })
       gsap.to(rightArrowRef.current, { duration: .5, right: '5%', ease: Power3.easeInOut })
     }
-  }, [modalDetails.show]);
+  }, [modalDetails.show, isSmallDevice]);
 
   return (
     <Modal show={modalDetails.show} backdropRef={backdropRef}>
@@ -77,12 +79,12 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
 
         <div className='grid grid-cols-1 grid-rows-3 gap-0 h-full md:grid-cols-3 md:grid-rows-none md:gap-6'>
           {/* image side */}
-          <section className='relative h-full col-span-2 row-span-1'>
+          <section className='relative h-full col-span-2 md:col-span-1 xl:col-span-2 row-span-1'>
             <Image placeholder='blur' className='rounded-t-[10px] md:rounded-l-[10px] md:rounded-r-none' alt={modalDetails.details?.date + ' APOD'} src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
           </section>
 
           {/* details side */}
-          <section className='relative flex justify-center items-center p-5 md:pr-5 md:pl-0 row-span-2 md:row-span-1'>
+          <section className='relative flex justify-center items-center p-5 md:pr-5 md:pl-0 row-span-2 md:row-span-1 md:col-span-2 xl:col-span-1 overflow-y-hidden'>
             {/* description */}
             <div className='h-full'>
               {/* <div> */}
