@@ -15,10 +15,6 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"></link>
         <link data-n-head="ssr" href="https://unicons.iconscout.com/release-pro/v4.0.0/css/solid.css" rel="stylesheet"></link>
 
-        {/* GSAP CDN */}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
-        
       </Head>
       <Component {...pageProps} />
     </>

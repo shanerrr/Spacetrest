@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import Script from 'next/script';
 import PictureOfDay from '../components/PictureOfDay';
 import PictureList from '../components/PictureList';
 
@@ -66,6 +67,10 @@ const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageRespon
         <meta name="description" content="Images about the universe" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+
+      {/* GSAP CDN */}
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></Script>
+      <Script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></Script>
 
       <main className='h-max bg-[#181A18]'>
         {/* our main page (Picture of the day)*/}

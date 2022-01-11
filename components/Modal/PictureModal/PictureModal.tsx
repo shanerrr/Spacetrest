@@ -74,10 +74,8 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
       </div>
 
       <main ref={cardRef} className='bg-white absolute rounded-t-[10px] -bottom-96 md:bottom-auto h-[95%] md:top-full md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:h-3/4 md:w-3/4 md:rounded-[10px]'>
-        {/* <main ref={cardRef} className='bg-white absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 h-3/4 w-3/4 rounded-[10px]'> */}
 
         <div className='grid grid-cols-1 grid-rows-3 gap-0 h-full md:grid-cols-3 md:grid-rows-none md:gap-6'>
-          {/* <div className='grid grid-cols-3 h-full gap-6'> */}
           {/* image side */}
           <section className='relative h-full col-span-2 row-span-1'>
             <Image placeholder='blur' className='rounded-t-[10px] md:rounded-l-[10px] md:rounded-r-none' src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
@@ -85,12 +83,6 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
 
           {/* details side */}
           <section className='relative flex justify-center items-center p-5 md:pr-5 md:pl-0 row-span-2 md:row-span-1'>
-            {/* <section className='relative flex justify-center items-center pr-5 overflow-y-auto'> */}
-            {/* x icon */}
-            {/* <div title='Close' className='absolute top-2 right-2 cursor-pointer' onClick={closeModalHandler}>
-              <i className="uis uis-times text-4xl"></i>
-            </div> */}
-
             {/* description */}
             <div className='h-full'>
               {/* <div> */}
@@ -111,12 +103,11 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
                 <i className={`${likes[modalDetails?.details?.hdurl] ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} hover:text-red-900 text-4xl cursor-pointer transition-colors`}></i>
               </div>
               <div title="Share" className='relative' onClick={(e) => handleCopyClick(`${modalDetails.hostURI}/photo/${modalDetails.details.date}`)}>
-                {isCopied && <span className='pr-3 absolute -left-5 -top-10 w-max p-2 bg-blue-900 rounded-[10px] text-white font-medium animate-fadeInBottom'>Link copied!</span>}
+                {isCopied && <span className='pr-3 absolute -left-5 -top-10 w-max p-2 bg-blue-900 rounded-[10px] text-white font-medium animate-fadeInBottom'>Link copied to clipboard!</span>}
                 <i className="pl-3 uil uil-share text-4xl cursor-pointer hover:text-blue-900"></i>
               </div>
             </div>
           </section>
-
         </div>
       </main>
 
