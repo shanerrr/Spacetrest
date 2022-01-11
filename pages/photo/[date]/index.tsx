@@ -28,7 +28,7 @@ const PhotoOfDate = ({ imageResponse }: { imageResponse: image }) => {
   return (
     <>
       <Head>
-        <title>{imageResponse.date} Picture of the day</title>
+        <title>Spacetrest: {imageResponse.date} Picture of the day</title>
         <meta name="description" content="Images about the universe" />
         <link rel="icon" href="/favicon.png" />
       </Head>
@@ -38,7 +38,6 @@ const PhotoOfDate = ({ imageResponse }: { imageResponse: image }) => {
         <section className='h-screen relative align-middle snap-center'>
           <PictureOfDay imageResponse={imageResponse} isLiked={likes[imageResponse.hdurl]} onLikeClick={(url: string, event: React.MouseEvent<HTMLElement>) => likeHandler(url, event)} scrollToGallery={undefined} />
         </section>
-
       </main>
     </>
   )
