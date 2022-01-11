@@ -18,8 +18,6 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
   const [isCopied, setIsCopied] = React.useState(false);
   const isSmallDevice = useIsSmallDevice();
 
-  console.log(isSmallDevice)
-
   //animations for dekstop and mobile
   const animationOpen = isSmallDevice ? { duration: .5, bottom: 0 } : { duration: 0.5, top: '50%', left: '50%' };
   const animationClose = isSmallDevice ? { duration: .5, opacity: 0, bottom: -500, } : { duration: 0.5, top: '125%', left: '50%', opacity: 0 };
@@ -71,35 +69,44 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
     <Modal show={modalDetails.show} backdropRef={backdropRef}>
 
       {/* back button - exclude on first photo */}
-      <div ref={leftArrowRef} className={`absolute left-0 top-1/2 cursor-pointer z-30 ${modalDetails.details?.idx === 0 ? 'invisible' : 'visible'}`} onClick={() => arrowClick(true, modalDetails.details?.idx)}>
-        <i className="uis uis-arrow-circle-left text-white text-6xl"></i>
+      <div ref={leftArrowRef} className={`absolute left-0 top-[18%] md:top-1/2 cursor-pointer z-30 ${modalDetails.details?.idx === 0 ? 'invisible' : 'visible'}`} onClick={() => arrowClick(true, modalDetails.details?.idx)}>
+        <i className="uis uis-arrow-circle-left text-white text-5xl md:text-6xl"></i>
       </div>
 
-      <main ref={cardRef} className='bg-white absolute -bottom-96 h-5/6 rounded-t-[10px]'>
+      <main ref={cardRef} className='bg-white absolute rounded-t-[10px] -bottom-96 md:bottom-auto h-[95%] md:top-full md:left-1/2 md:transform md:-translate-x-1/2 md:-translate-y-1/2 md:h-3/4 md:w-3/4 md:rounded-[10px]'>
         {/* <main ref={cardRef} className='bg-white absolute top-full left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 h-3/4 w-3/4 rounded-[10px]'> */}
 
-        <div className='grid grid-cols-3 h-full gap-6'>
+        <div className='grid grid-cols-1 grid-rows-3 gap-0 h-full md:grid-cols-3 md:grid-rows-none md:gap-6'>
+          {/* <div className='grid grid-cols-3 h-full gap-6'> */}
           {/* image side */}
-          <section className='relative h-full col-span-2'>
-            <Image placeholder='blur' className='rounded-none lg:rounded-t-[10px]' src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
+          <section className='relative h-full col-span-2 row-span-1'>
+            <Image placeholder='blur' className='rounded-t-[10px] md:rounded-l-[10px] md:rounded-r-none' src={modalDetails.details?.title} loader={() => modalDetails.details?.url} layout='fill' objectFit='cover' blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkMAYAADkANVKH3ScAAAAASUVORK5CYII=" />
           </section>
 
           {/* details side */}
-          <section className='relative flex justify-center items-center pr-5 overflow-y-auto'>
+          <section className='relative flex justify-center items-center p-5 md:pr-5 md:pl-0 row-span-2 md:row-span-1'>
+            {/* <section className='relative flex justify-center items-center pr-5 overflow-y-auto'> */}
             {/* x icon */}
-            <div title='Close' className='absolute top-2 right-2 cursor-pointer' onClick={closeModalHandler}>
+            {/* <div title='Close' className='absolute top-2 right-2 cursor-pointer' onClick={closeModalHandler}>
               <i className="uis uis-times text-4xl"></i>
-            </div>
+            </div> */}
 
             {/* description */}
-            <div>
-              <h1 className='font-bold text-4xl'>{modalDetails.details?.title}</h1>
-              <span className='text-sm'>{modalDetails.details?.date}</span>
-              <p className='mt-6 overflow-y-auto h-2/4'>{modalDetails.details?.explanation}</p>
+            <div className='h-full'>
+              {/* <div> */}
+              <div className='flex justify-between'>
+                <div>
+                  <h1 className='font-bold text:3xl md:text-4xl'>{modalDetails.details?.title}</h1>
+                  <span className='text-sm'>{modalDetails.details?.date}</span>
+                </div>
+                {/* x icon */}
+                <div title='Close'><i className="uis uis-times text-4xl cursor-pointer" onClick={closeModalHandler}></i></div>
+              </div>
+              <p className='mt-6 overflow-y-auto h-4/6'>{modalDetails.details?.explanation}</p>
             </div>
 
             {/* heart and share icon */}
-            <div className='absolute bottom-0 flex justify-center py-4 w-full border-t-2 bg-white item'>
+            <div className='fixed md:absolute bottom-0 flex justify-center py-4 w-full border-t-2 bg-white item'>
               <div title="Like" onClick={(e) => onLikeClick(modalDetails.details.hdurl, e)}>
                 <i className={`${likes[modalDetails?.details?.hdurl] ? 'uis uis-heart-alt text-red-900' : 'uil uil-heart '} hover:text-red-900 text-4xl cursor-pointer transition-colors`}></i>
               </div>
@@ -114,8 +121,8 @@ const PictureModal = ({ modalDetails, likes, onLikeClick, arrowClick, closeModal
       </main>
 
       {/* next button - exclude on last photo of list */}
-      <div ref={rightArrowRef} className={`absolute right-0 top-1/2 cursor-pointer z-30 ${modalDetails.details?.idx === modalDetails.length - 1 ? 'invisible' : 'visible'}`} onClick={() => arrowClick(false, modalDetails.details?.idx)}>
-        <i className="uis uis-arrow-circle-right text-white text-6xl"></i>
+      <div ref={rightArrowRef} className={`absolute right-0 top-[18%] md:top-1/2 cursor-pointer z-30 ${modalDetails.details?.idx === modalDetails.length - 1 ? 'invisible' : 'visible'}`} onClick={() => arrowClick(false, modalDetails.details?.idx)}>
+        <i className="uis uis-arrow-circle-right text-white text-5xl md:text-6xl"></i>
       </div>
 
     </Modal>

@@ -29,7 +29,7 @@ const Modal = ({ children, show, backdropRef }: { children: ReactNode, show: boo
   if (!show || !mounted) return null;
 
   return createPortal(
-    <main ref={backdropRef} className="top-0 left-0 right-0 bottom-0 fixed z-10 bg-black/75 opacity-0">
+    <main ref={backdropRef} className="top-0 left-0 right-0 bottom-0 fixed bg-black/75 opacity-0">
       {children}
     </main>,
     ref.current as HTMLElement

@@ -13,7 +13,7 @@ const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageRespon
   //state that captures our likes (will be using a set using url as unique key)
   const [likes, setLikes] = React.useState<{ [key: string]: boolean }>({});
   //state that captures our results from endpoint
-  const [photos, setPhotos] = React.useState({ loading: true, list: Array<image>() });
+  const [photos, setPhotos] = React.useState({ loading: true, error: false, list: Array<image>() });
   //state that captures our infinte scroll page number pagination.
   const [pageNumber, setPageNumber] = React.useState(0);
 
@@ -49,11 +49,15 @@ const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageRespon
   //on component mount, fetch the other images
   //api call getting all images of days for 30 days
   React.useEffect(() => {
-    setPhotos({ ...photos, loading: true });
-    const startDate = new Date();
-    new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - (pageNumber + 1), startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth() - pageNumber, startDate.getDate() - 1).toISOString().split('T')[0])
-      .then(res => setPhotos(prev => ({ loading: false, list: [...prev.list, ...res.data.map((v: image) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: image) => image.media_type === "image").reverse()] })))
-  }, [pageNumber]);
+    //if error, we can try again but only do if error is false.
+    if (!photos.error) {
+      setPhotos({ ...photos, loading: true });
+      const startDate = new Date();
+      new ImageService().getPictureOfDay(new Date(startDate.getFullYear(), startDate.getMonth() - (pageNumber + 1), startDate.getDate()).toISOString().split('T')[0], new Date(startDate.getFullYear(), startDate.getMonth() - pageNumber, startDate.getDate() - 1).toISOString().split('T')[0])
+        .then(res => setPhotos(prev => ({ loading: false, error: false, list: [...prev.list, ...res.data.map((v: image) => ({ ...v, colLength: Math.floor(Math.random() * 2) + 1 })).filter((image: image) => image.media_type === "image").reverse()] })))
+        .catch(() => setPhotos({ ...photos, error: true, loading: false }));
+    }
+  }, [pageNumber, photos.error]);
 
   return (
     <>
@@ -71,7 +75,7 @@ const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageRespon
 
         {/* our gallery component */}
         <section ref={galleryRef} className='h-max relative'>
-          <PictureList listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} hostURI={hostURI} />
+          <PictureList error={photos.error} errorHandler={() => setPhotos({ ...photos, error: false })} listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} hostURI={hostURI} />
         </section>
 
         {/* {!photos.loading && <footer className='pb-3 opacity-25 hover:opacity-100 bg-[#181A18]'>
