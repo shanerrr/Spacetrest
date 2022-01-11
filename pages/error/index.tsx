@@ -16,7 +16,7 @@ const Error = () => {
 
       <div className='h-screen relative'>
 
-        <Image src="/error.gif" layout='fill' objectFit='cover' priority={true} quality={100} />
+        <Image src="/error.gif" alt='rotating moon' layout='fill' objectFit='cover' priority={true} quality={100} />
 
         <div className="container mx-auto h-screen">
           <div className='absolute top-1/2 transform -translate-y-1/2'>
@@ -30,7 +30,7 @@ const Error = () => {
           </div>
           <div className="absolute bottom-[5%] left-1/2 transform -translate-x-1/2 cursor-pointer">
             <a href='https://github.com/shanerrr/Spacetrest'>
-              <Image src="/github.png" height={25} width={25} objectFit='cover' priority={true} quality={100} />
+              <Image src="/github.png" alt='github logo' height={25} width={25} objectFit='cover' priority={true} quality={100} />
             </a>
           </div>
         </div>
