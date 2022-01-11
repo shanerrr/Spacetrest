@@ -28,6 +28,11 @@ const Error = () => {
               </a>
             </Link>
           </div>
+          <div className="absolute bottom-[5%] left-1/2 transform -translate-x-1/2 cursor-pointer">
+            <a href='https://github.com/shanerrr/Spacetrest'>
+              <Image src="/github.png" height={25} width={25} objectFit='cover' priority={true} quality={100} />
+            </a>
+          </div>
         </div>
       </div>
     </>
