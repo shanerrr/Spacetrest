@@ -21,18 +21,20 @@ export class ImageService {
     return axios({
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
+      timeout: startDate ? 30000 : 10000,
       url: this.uri + this.config.pictureOfDay + `${startDate ? `&start_date=${startDate}&end_date=${endDate}` : ''}`
     });
   }
 
   /**
-   * @param startDate optional param 
+   * @param date date of image requested
    * @returns object of image
    */
   getSpecificImageOfDay(date: string | string[]) {
     return axios({
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
+      timeout: 10000,
       url: this.uri + this.config.pictureOfDay + `&date=${date}`
     });
   }

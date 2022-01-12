@@ -82,7 +82,7 @@ const Home: NextPage<{ imageResponse: image, hostURI: string }> = ({ imageRespon
         <section ref={galleryRef} className='h-max relative'>
           <PictureList error={photos.error} errorHandler={() => setPhotos({ ...photos, error: false })} listLoading={photos.loading} list={photos.list} lastGalleryItem={lastGalleryItem} likes={likes} onLikeClick={likeHandler} hostURI={hostURI} />
         </section>
-        
+
       </main>
     </>
   )
@@ -106,7 +106,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       return {
         props: {},
         redirect: {
-          permanent: 'false',
+          permanent: false,
           destination: '/error'
         }
       };

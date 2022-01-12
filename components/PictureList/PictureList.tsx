@@ -21,9 +21,9 @@ const PictureList = ({ error, errorHandler, list, listLoading, lastGalleryItem, 
         {/* loading element */}
         {listLoading && <div className='mx-auto text-center py-5 md:py-10'><i className="inline-block uil uil-star text-3xl lg:text-5xl animate-loader text-white"></i></div>}
         {/* error element */}
-        {error && <div className='mx-auto text-center py-5 md:py-10' onClick={errorHandler}>
+        {error && <div className='mx-auto text-center py-5 md:py-10 cursor-pointer' onClick={errorHandler}>
           <i className="uil uil-sync-exclamation text-3xl lg:text-5xl text-red-500"></i>
-          <h1 className='font-medium text-white text-sm pt-3'>API call timed out. Click here to try again</h1>
+          <h1 className='font-medium text-white text-sm pt-3'>API call timed out (NASA APOD API). Click here to try again</h1>
         </div>}
       </section>
 
