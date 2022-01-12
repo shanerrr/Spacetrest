@@ -21,7 +21,7 @@ export class ImageService {
     return axios({
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
-      timeout: startDate ? 60000 : 4500,
+      timeout: startDate ? 60000 : 7000,
       url: this.uri + this.config.pictureOfDay + `${startDate ? `&start_date=${startDate}&end_date=${endDate}` : ''}`
     });
   }
