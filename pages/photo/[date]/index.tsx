@@ -60,7 +60,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return {
       props: {},
       redirect: {
-        permanent: 'false',
+        permanent: false,
         destination: '/'
       }
     };
