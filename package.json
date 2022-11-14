@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/gsap": "^3.0.0",
     "axios": "^1.1.3",
     "next": "13.0.3",
     "react": "18.2.0",
